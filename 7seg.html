@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>七段数码管显示</title>
+    <style>
+        body{
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            gap:20px;
+            font-family:system-ui;
+            margin-top:50px;
+        }
+        /* 数码管容器 */
+        .display{
+            width:160px;
+            height:280px;
+            background:#222;
+            padding:20px;
+            border-radius:12px;
+            position:relative;
+        }
+        .segment{
+            position:absolute;
+            background:#333;
+            transition:background 0.3s;
+        }
+        .on{
+            background:red;
+            box-shadow:0 0 8px red;
+        }
+        /* 七段 a~g */
+        .a{ top:10px; left:40px; width:80px; height:12px; }
+        .b{ top:30px; right:20px; width:12px; height:80px; }
+        .c{ bottom:30px; right:20px; width:12px; height:80px; }
+        .d{ bottom:10px; left:40px; width:80px; height:12px; }
+        .e{ bottom:30px; left:20px; width:12px; height:80px; }
+        .f{ top:30px; left:20px; width:12px; height:80px; }
+        .g{ top:135px; left:40px; width:80px; height:12px; }
+        /* dp小数点，第8个灯 */
+        .dp{ bottom:15px; right:8px; width:14px; height:14px; border-radius:50%; }
+    </style>
+</head>
+<body>
+    <h3>七段数码管（8个小灯 a-g + dp）</h3>
+    <div>
+        <input type="number" id="numInput" min="0" max="9" placeholder="输入0-9">
+        <button onclick="showDigit()">显示</button>
+    </div>
+
+    <div class="display">
+        <div class="segment a"></div>
+        <div class="segment b"></div>
+        <div class="segment c"></div>
+        <div class="segment d"></div>
+        <div class="segment e"></div>
+        <div class="segment f"></div>
+        <div class="segment g"></div>
+        <div class="segment dp"></div>
+    </div>
+
+<script>
+// 0~9 每一位对应的8段状态 [a,b,c,d,e,f,g,dp] true=亮 false=灭
+const segMap = [
+    [1,1,1,1,1,1,0,0], //0
+    [0,1,1,0,0,0,0,0], //1
+    [1,1,0,1,1,0,1,0], //2
+    [1,1,1,1,0,0,1,0], //3
+    [0,1,1,0,0,1,1,0], //4
+    [1,0,1,1,0,1,1,0], //5
+    [1,0,1,1,1,1,1,0], //6
+    [1,1,1,0,0,0,0,0], //7
+    [1,1,1,1,1,1,1,0], //8
+    [1,1,1,1,0,1,1,0]  //9
+];
+
+function showDigit(){
+    let val = document.getElementById('numInput').value;
+    let n = parseInt(val);
+    if(isNaN(n) || n<0 ||n>9){
+        alert("请输入0~9之间数字");
+        return;
+    }
+    let segs = document.querySelectorAll('.segment');
+    const data = segMap[n];
+    for(let i=0;i<8;i++){
+        if(data[i]) segs[i].classList.add('on');
+        else segs[i].classList.remove('on');
+    }
+}
+</script>
+</body>
+</html>
